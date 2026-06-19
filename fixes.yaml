@@ -40,4 +40,5 @@ fixes:
     upstream: https://github.com/malaterre/GDCM/commit/5829c95c8ac3afa9a3a3413675e948959c28a789
     applied_upstream: "3.2.2"
     debian_bug: 1122862
+    launchpad_bug: 2157578
     patch: gdcm/CVE-2025-11266.patch
