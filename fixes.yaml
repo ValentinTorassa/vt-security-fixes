@@ -12,6 +12,7 @@ fixes:
     upstream: https://gitlab.gnome.org/GNOME/libsoup/-/merge_requests/473
     applied_upstream: "3.4.0"
     debian_bug: 1116469
+    launchpad_bug: 2157576
     patch: libsoup3/CVE-2025-11021-CVE-2025-4945.patch
 
   - cve: CVE-2025-11683
