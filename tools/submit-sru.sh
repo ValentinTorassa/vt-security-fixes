@@ -91,7 +91,7 @@ for entry in "${fixes[@]}"; do
         sdir="$workdir/$pkg-$s"
         rm -rf "$sdir"; mkdir -p "$sdir"
         ( cd "$sdir" && pull-lp-source "$pkg" "$s" ) || die "pull-lp-source $pkg $s failed"
-        src="$(find "$sdir" -maxdepth 1 -type d -name "$pkg-*" | head -1)"
+        src="$(find "$sdir" -mindepth 1 -maxdepth 1 -type d -name "$pkg-*" | head -1)"
         [[ -d "$src" ]] || die "could not locate unpacked source for $pkg/$s"
 
         cur="$(cd "$src" && dpkg-parsechangelog -S Version)"
