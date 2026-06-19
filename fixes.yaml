@@ -27,6 +27,7 @@ fixes:
     standard: { jammy: needed, noble: needed }
     upstream: https://github.com/cpan-authors/YAML-Syck/commit/dcf4c8477b82ef439f43fd20dc099082d096df02
     applied_upstream: "1.36"
+    launchpad_bug: 2157577
     patch: libyaml-syck-perl/CVE-2025-11683.patch
 
   - cve: CVE-2025-11266
