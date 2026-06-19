@@ -1,0 +1,51 @@
+diff -Nru gdcm-3.0.10/debian/changelog gdcm-3.0.10/debian/changelog
+--- gdcm-3.0.10/debian/changelog	2022-02-04 17:45:42.000000000 +0000
++++ gdcm-3.0.10/debian/changelog	2026-06-19 08:40:21.000000000 +0000
+@@ -1,3 +1,11 @@
++gdcm (3.0.10-1build2.1) jammy-security; urgency=medium
++
++  * SECURITY UPDATE: out-of-bounds write in DICOM fragment parsing (LP: #2157578)
++    - debian/patches/CVE-2025-11266.patch: out-of-bounds write in DICOM fragment parsing.
++    - CVE-2025-11266
++
++ -- Valentín Torassa Colombero <valentintorassa21@gmail.com>  Fri, 19 Jun 2026 08:40:21 +0000
++
+ gdcm (3.0.10-1build2) jammy; urgency=medium
+ 
+   * No-change rebuild against latest poppler
+diff -Nru gdcm-3.0.10/debian/patches/CVE-2025-11266.patch gdcm-3.0.10/debian/patches/CVE-2025-11266.patch
+--- gdcm-3.0.10/debian/patches/CVE-2025-11266.patch	1970-01-01 00:00:00.000000000 +0000
++++ gdcm-3.0.10/debian/patches/CVE-2025-11266.patch	2026-06-19 08:40:21.000000000 +0000
+@@ -0,0 +1,24 @@
++Description: Fix OOB write in DICOM encapsulated PixelData fragment parsing (CVE-2025-11266)
++ An out-of-bounds write vulnerability exists in GDCM during parsing
++ of malformed DICOM files containing encapsulated PixelData fragments.
++ When GetLength() returns less than 3, an unsigned integer underflow
++ causes out-of-bounds buffer access. Add length check before accessing.
++Origin: upstream, https://github.com/malaterre/GDCM/commit/5829c95c8ac3afa9a3a3413675e948959c28a789
++Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/gdcm/+bug/2157578
++Bug-Debian: https://bugs.debian.org/1122862
++Applied-Upstream: 3.2.2
++Reviewed-by: Ubuntu Security Team
++Last-Update: 2026-06-17
++---
++This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
++--- a/Source/DataStructureAndEncodingDefinition/gdcmSequenceOfFragments.h
+++++ b/Source/DataStructureAndEncodingDefinition/gdcmSequenceOfFragments.h
++@@ -237,7 +237,7 @@ std::istream& ReadValue(std::istream &is, bool /*readvalues*/)
++       const size_t lastf = Fragments.size() - 1;
++       const ByteValue *bv = Fragments[ lastf ].GetByteValue();
++       const char *a = bv->GetPointer();
++-      gdcmAssertAlwaysMacro( (unsigned char)a[ bv->GetLength() - 3 ] == 0xfe );
+++      gdcmAssertAlwaysMacro( bv->GetLength() >= 3 && (unsigned char)a[ bv->GetLength() - 3 ] == 0xfe );
++       Fragments[ lastf ].SetByteValue( bv->GetPointer(), bv->GetLength() - 3 );
++       is.seekg( -11, std::ios::cur );
++       assert( is.good() );
+diff -Nru gdcm-3.0.10/debian/patches/series gdcm-3.0.10/debian/patches/series
+--- gdcm-3.0.10/debian/patches/series	2021-11-23 09:19:38.000000000 +0000
++++ gdcm-3.0.10/debian/patches/series	2026-06-19 08:40:21.000000000 +0000
+@@ -7,3 +7,4 @@
+ #use_swig_add_library_for_csharp.patch
+ #fix_charls_2.patch
+ #fix_swig4.patch
++CVE-2025-11266.patch
